@@ -16,9 +16,9 @@ public class Message {
    */
   
   public Message() {
+    this.message = "I am a message!";
     this.moveValidity = false;
     this.code = 0;
-    this.message = "I am a message!";
   }  
   
   /** 
@@ -27,13 +27,49 @@ public class Message {
   
   public boolean checkMoveValidity(GameBoard gameBoard, Move move) {
     if (gameBoard.getBoardState()[move.getMoveX()][move.getMoveY()] == 0) {
-      return true;
+      this.moveValidity = true;
+      this.message = "Valid!";
+      this.code = 1;
     } else {
-      moveValidity = false;
-      code = -100;
-      message = "Not Valid!";
-      return false;
+      this.moveValidity = false;
+      this.message = "Not Valid!";
+      this.code = -1;
     }
+    return moveValidity;
+  }
+  
+  /** 
+   * This function checks game GameStarted.
+   */
+  
+  public boolean checkJoin(GameBoard gameBoard) {
+    if (gameBoard.getGameStarted()) {
+      this.moveValidity = true;
+      this.message = "P2 join, P1 ready to move!";
+      this.code = 2;
+    } else {
+      this.moveValidity = false;
+      this.message = "Wait for P2!";
+      this.code = -2;
+    }
+    return moveValidity;
+  }
+  
+  /** 
+   * This function checks turn.
+   */
+  
+  public boolean checkTurn(GameBoard gameBoard, int turn) {
+    if (gameBoard.getTurn() == turn) {
+      this.moveValidity = true;
+      this.message = "Your Turn!";
+      this.code = +3;
+    } else {
+      this.moveValidity = false;
+      this.message = "Not Your Turn!";
+      this.code = -3;
+    }
+    return moveValidity;
   }
   
   /** 
@@ -44,12 +80,14 @@ public class Message {
     for (int i = 0; i < 3; i++) {
       for (int j = 0; j < 3; j++) {
         if (gameBoard.getBoardState()[i][j] == 0) {
-          code = 11;
-          message = "Draw!";
+          this.code = -12;
           return false;
         }
       }
     }
+    this.message = "Draw!";
+    gameBoard.setGameStarted(false);
+    this.code = 12;
     return true;
   }
   
@@ -63,65 +101,71 @@ public class Message {
     if (gameBoard.getBoardState()[0][0] == type 
         && gameBoard.getBoardState()[0][1] == type 
         && gameBoard.getBoardState()[0][2] == type) {
-      code = 1000;
-      message = "End Game, some wins.";
+      this.message = "End Game, some wins.";
+      gameBoard.setGameStarted(false);
+      this.code = 100;
       return true;
-    }
-    if (gameBoard.getBoardState()[1][0] == type 
+    } else if (gameBoard.getBoardState()[1][0] == type 
         && gameBoard.getBoardState()[1][1] == type 
         && gameBoard.getBoardState()[1][2] == type) {
-      code = 1000;
-      message = "End Game, some wins.";
+      this.message = "End Game, some wins.";
+      gameBoard.setGameStarted(false);
+      this.code = 100;
       return true;
-    }
-
-    if (gameBoard.getBoardState()[2][0] == type 
+    } else if (gameBoard.getBoardState()[2][0] == type 
         && gameBoard.getBoardState()[2][1] == type 
         && gameBoard.getBoardState()[2][2] == type) {
-      code = 1000;
-      message = "End Game, some wins.";
+      this.message = "End Game, some wins.";
+      gameBoard.setGameStarted(false);
+      this.code = 100;
       return true;
-    }
-    
-    if (gameBoard.getBoardState()[0][0] == type 
+    } else if (gameBoard.getBoardState()[0][0] == type 
         && gameBoard.getBoardState()[1][0] == type 
         && gameBoard.getBoardState()[2][0] == type) {
-      code = 1000;
-      message = "End Game, some wins.";
+      this.message = "End Game, some wins.";
+      gameBoard.setGameStarted(false);
+      this.code = 100;
       return true;
-    }
-  
-    if (gameBoard.getBoardState()[0][1] == type 
+    } else if (gameBoard.getBoardState()[0][1] == type 
         && gameBoard.getBoardState()[1][1] == type 
         && gameBoard.getBoardState()[2][1] == type) {
-      code = 1000;
-      message = "End Game, some wins.";
+      this.message = "End Game, some wins.";
+      gameBoard.setGameStarted(false);
+      this.code = 100;
       return true;
     
-    }
-    if (gameBoard.getBoardState()[0][2] == type 
+    } else if (gameBoard.getBoardState()[0][2] == type 
         && gameBoard.getBoardState()[1][2] == type 
         && gameBoard.getBoardState()[2][2] == type) {
-      code = 1000;
-      message = "End Game, some wins.";
+      this.message = "End Game, some wins.";
+      gameBoard.setGameStarted(false);
+      this.code = 100;
       return true;
-    }
-    if (gameBoard.getBoardState()[0][0] == type 
+    } else if (gameBoard.getBoardState()[0][0] == type 
         && gameBoard.getBoardState()[1][1] == type 
         && gameBoard.getBoardState()[2][2] == type) {
-      code = 1000;
-      message = "End Game, some wins.";
+      this.message = "End Game, some wins.";
+      gameBoard.setGameStarted(false);
+      this.code = 100;
       return true;
-    }
-    if (gameBoard.getBoardState()[2][0] == type 
+    } else if (gameBoard.getBoardState()[2][0] == type 
         && gameBoard.getBoardState()[1][1] == type 
         && gameBoard.getBoardState()[0][2] == type) {
-      code = 1000;
-      message = "End Game, some wins.";
+      this.message = "End Game, some wins.";
+      gameBoard.setGameStarted(false);
+      this.code = 100;
       return true;
+    } else {
+      this.code = -100;
+      return false;
     }
-    return false;
     
   }
+  
+  public String getMessage() {
+    System.out.println(code);
+    return this.message; 
+  }
+  
 
 }

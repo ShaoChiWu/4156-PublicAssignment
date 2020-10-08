@@ -20,16 +20,21 @@ public class Move {
     this.moveY = moveY;
   }
   
-  public void setMoveX(int moveX) {
+  /** 
+   * This is Move class.
+   * moveX and moveY represents the move
+   * player is the one who moves
+   */
+ 
+  public Move(Player player, int moveX, int moveY) {
+    this.player = player;
     this.moveX = moveX;
+    this.moveY = moveY;
   }
+  
   
   public int getMoveX() {
     return moveX;
-  }
-  
-  public void setMoveY(int moveY) {
-    this.moveY = moveY;
   }
   
   public int getMoveY() {

@@ -24,25 +24,20 @@ public class Player {
     this.id = id;
   }
   
-  public void setPlayer(char type, int id) {
-    this.type = type;
-    this.id = id;
+  public char getType() {
+    return type;
   }
   
   public void setType(char type) {
     this.type = type;
   }
   
-  public char getType() {
-    return type;
+  public int getId() {
+    return id;
   }
   
   public void setId(int id) {
     this.id = id;
-  }
-  
-  public int getId() {
-    return id;
   }
  
 }

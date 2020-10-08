@@ -74,10 +74,32 @@ public class GameBoard {
       return;
     }
     turn = (move.getplayer().getId() == 1) ? 2 : 1;
+    
   }
   
+  /**
+   * For testing
+   * Set 'X' or 'O' to the 3x3 board.
+   * Check if the game ends 
+   * Switch turn
+   */
+  public void setBoardStateForTest(Move move) {
+    boardState[move.getMoveX()][move.getMoveY()] = move.getplayer().getType();
+
+  }
+  
+  /**
+   * Get the 3x3 board.
+   */
+  
   public char[][] getBoardState() {
-    return boardState;
+    char[][] boardStateCopy = new char[3][3];
+    for (int i = 0; i < 3; i++) {
+      for (int j = 0; j < 3; j++) {
+        boardStateCopy[i][j] = boardState[i][j];
+      }
+    }
+    return boardStateCopy;
   }
   
   /** 
@@ -97,12 +119,25 @@ public class GameBoard {
     isDraw = false;
   }
   
-  public void setTurn(Player player) {
-    turn = player.getId();
-  }
   
   public int getTurn() {
     return turn;
+  }
+  
+  
+  public void setTurn(int turn) {
+    this.turn = turn;
+  }
+  
+  /**
+   * Get game game result.
+   */
+  public int getResult() {
+    if (isDraw) {
+      return 12;
+    } else {
+      return winner;
+    }
   }
   
 }
