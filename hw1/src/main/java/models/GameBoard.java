@@ -33,6 +33,23 @@ public class GameBoard {
     
   }
   
+  /**
+   * GameBoard class of the model. Copy constructor.
+   */
+  public GameBoard(GameBoard gb) {
+    gameStarted = gb.gameStarted;
+    turn = gb.turn;
+    for (int i = 0; i < 3; ++i) {
+      for (int j = 0; j < 3; ++j) {
+        boardState[i][j] = gb.boardState[i][j];
+      }
+    }
+    winner = gb.winner;
+    isDraw = gb.isDraw;
+    p1 = gb.p1;
+    p2 = gb.p2;
+  }
+  
   public void setP1(Player p1) {
     this.p1 = p1;
   }
@@ -47,6 +64,14 @@ public class GameBoard {
   
   public Player getP2() {
     return p2;
+  }
+  
+  public void setWinner(int winner) {
+    this.winner = winner;
+  }
+
+  public void setDraw(boolean draw) {
+    this.isDraw = draw;
   }
   
   public void setGameStarted(boolean gameStarted) {
@@ -85,6 +110,17 @@ public class GameBoard {
    */
   public void setBoardStateForTest(Move move) {
     boardState[move.getMoveX()][move.getMoveY()] = move.getplayer().getType();
+
+  }
+  
+  /**
+   * For testing
+   * Set 'X' or 'O' to the 3x3 board.
+   * Check if the game ends 
+   * Switch turn
+   */
+  public void setBoardStateForTest(char type, int moveX, int moveY) {
+    boardState[moveX][moveY] = type;
 
   }
   

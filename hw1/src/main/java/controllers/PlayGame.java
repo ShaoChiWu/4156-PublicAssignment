@@ -28,17 +28,24 @@ public class PlayGame {
    */
   public static void main(final String[] args) {
     
-    GameBoard gameBoard = new GameBoard();
-
     app = Javalin.create(config -> {
       config.addStaticFiles("/public");
     }).start(PORT_NUMBER);
+    
+    Database db = new Database();
+    
+    // CDOE START HERE
+    db.databaseNewGame();
+    GameBoard gameBoard = new GameBoard();
+    db.fromDataBase(gameBoard);
     
     // Endpoint newgame
     app.get("/newgame", ctx -> {
       gameBoard.setNewGame(); // clear gameBoard, ready to start again
       ctx.redirect("tictactoe.html");
-      new Database().databaseNewGame();
+      new Database().databaseNewGame(); 
+      //Every time a new game starts, the database table(s) must be cleaned.
+      new Database().clearDatabase();
     });
    
     // Endpoint startgame
@@ -48,8 +55,10 @@ public class PlayGame {
       System.out.println(type1);
       Player p1 = new Player(type1, 1);
       gameBoard.setP1(p1);
+      gameBoard.setP2(null);
       System.out.println(new Gson().toJson(gameBoard)); // Convert models to JSON objects
       ctx.result(new Gson().toJson(gameBoard));
+      new Database().gameboardToDatabase(gameBoard);
     });
     
     // Endpoint joingame
@@ -74,7 +83,6 @@ public class PlayGame {
       int turn = Character.getNumericValue(ctx.pathParam("playerId").charAt(0));
       if (message.checkTurn(gameBoard, turn) == false) {
         ctx.result(new Gson().toJson(message));
-        //new Database().gameboardToDatabase(gameBoard);
         return;
       }
       
@@ -87,18 +95,18 @@ public class PlayGame {
           Move playerMove = new Move(moveX, moveY);
           if (gameBoard.getTurn() == 1) { //PLayer 1 moves
             playerMove.setplayer(gameBoard.getP1());
-          } else { //PLayer 2 moves
+          } else if (gameBoard.getTurn() == 2) { //PLayer 2 moves
             playerMove.setplayer(gameBoard.getP2());
           }
           if (message.checkMoveValidity(gameBoard, playerMove)) { // Check if move is valid
             gameBoard.setBoardState(playerMove);
             sendGameBoardToAllPlayers(new Gson().toJson(gameBoard));
             ctx.result(new Gson().toJson(message));
-            //new Database().gameboardToDatabase(gameBoard);
+            new Database().gameboardToDatabase(gameBoard);
             return;
           }
           ctx.result(new Gson().toJson(message));
-          //new Database().gameboardToDatabase(gameBoard);
+          new Database().gameboardToDatabase(gameBoard);
           return;
         }
       } 
