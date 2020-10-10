@@ -76,9 +76,9 @@ public class GameTest {
     // Parse the response to JSON object
     JSONObject jsonObject = new JSONObject(responseBody);
 
-    // Check if game started after player 1 joins: Game should not start at this point
+    // Check if player 1 joins: Game should not start at this point
     assertEquals(false, jsonObject.get("gameStarted"));
-        
+    
     // ---------------------------- GSON Parsing -------------------------
         
     // GSON use to parse data to object
@@ -512,7 +512,7 @@ public class GameTest {
     // Parse the response to JSON object
     JSONObject jsonObject = new JSONObject(responseBody);
 
-    // Check if game started after player 1 joins: Game should not start at this point
+    // Check if player 1 joins: Game should not start at this point
     assertEquals(false, jsonObject.get("gameStarted"));
         
     // ---------------------------- GSON Parsing -------------------------

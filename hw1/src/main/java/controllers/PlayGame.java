@@ -1,20 +1,15 @@
 package controllers;
 
-
 import com.google.gson.Gson;
 import io.javalin.Javalin;
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.Statement;
 import java.util.Queue;
 import models.GameBoard;
 import models.Message;
 import models.Move;
 import models.Player;
-import utils.Database;
-
 import org.eclipse.jetty.websocket.api.Session;
+import utils.Database;
 
 
 public class PlayGame {
@@ -38,6 +33,9 @@ public class PlayGame {
     db.databaseNewGame();
     GameBoard gameBoard = new GameBoard();
     db.fromDataBase(gameBoard);
+    if (!gameBoard.getGameStarted() && gameBoard.getResult() == 0) {
+      gameBoard.setP2(null);
+    }
     
     // Endpoint newgame
     app.get("/newgame", ctx -> {
@@ -50,6 +48,7 @@ public class PlayGame {
    
     // Endpoint startgame
     app.post("/startgame", ctx -> {
+      gameBoard.setNewGame();
       String type = ctx.body();
       char type1 = type.charAt(type.length() - 1); // Get 'X' or 'O' from "type=?"
       System.out.println(type1);
@@ -111,7 +110,7 @@ public class PlayGame {
         }
       } 
       ctx.result(new Gson().toJson(message));
-      //new Database().gameboardToDatabase(gameBoard);
+      new Database().gameboardToDatabase(gameBoard);
     });
     
     // Endpoint getgameboard

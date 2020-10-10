@@ -22,6 +22,17 @@ public class Message {
   }  
   
   /** 
+   * This is message class.
+   * moveValidity is boolean, checks if move is valid
+   * code and message are for error handling
+   */
+  public Message(String message) {
+    this.message = message;
+    this.moveValidity = false;
+    this.code = 1111;
+  }  
+  
+  /** 
    * This function checks MoveValidity.
    */
   

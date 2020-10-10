@@ -30,7 +30,8 @@ public class GameBoard {
     this.boardState = new char[3][3];
     winner = 0;
     isDraw = false;
-    
+    p1 = null;
+    p2 = null;    
   }
   
   /**
@@ -39,6 +40,7 @@ public class GameBoard {
   public GameBoard(GameBoard gb) {
     gameStarted = gb.gameStarted;
     turn = gb.turn;
+    boardState = new char[3][3];
     for (int i = 0; i < 3; ++i) {
       for (int j = 0; j < 3; ++j) {
         boardState[i][j] = gb.boardState[i][j];
@@ -153,6 +155,8 @@ public class GameBoard {
     }
     winner = 0;
     isDraw = false;
+    p1 = null;
+    p2 = null;
   }
   
   

@@ -17,6 +17,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
+import utils.Database;
 
 @TestMethodOrder(OrderAnnotation.class) 
 public class UnitTest {
@@ -63,7 +64,7 @@ public class UnitTest {
     // Parse the response to JSON object
     JSONObject jsonObject = new JSONObject(responseBody);
 
-    // Check if game started after player 1 joins: Game should not start at this point
+    // Check if player 1 joins: Game should not start at this point
     assertEquals(false, jsonObject.get("gameStarted"));
         
     // ---------------------------- GSON Parsing -------------------------
@@ -500,7 +501,7 @@ public class UnitTest {
     // Parse the response to JSON object
     JSONObject jsonObject = new JSONObject(responseBody);
 
-    // Check if game started after player 1 joins: Game should not start at this point
+    // Check if player 1 joins: Game should not start at this point
     assertEquals(false, jsonObject.get("gameStarted"));
         
     // ---------------------------- GSON Parsing -------------------------
@@ -1202,6 +1203,67 @@ public class UnitTest {
     p1.setId(1);
     assertEquals(1, p1.getId());
   }
+  
+  @Test
+  public void testDatabaseNewGame() {
+    Database db = new Database();
+    db.databaseNewGame();
+    db.clearDatabase();
+    GameBoard gameBoard = new GameBoard();
+    db.fromDataBase(gameBoard);
+    assertEquals(false, gameBoard.getGameStarted());
+    assertEquals(0, gameBoard.getResult());
+  }
+  
+  @Test
+  public void testFromDataBase() {
+    Database db = new Database();
+    db.databaseNewGame();
+    db.clearDatabase();
+    GameBoard gameBoard = new GameBoard();
+    db.fromDataBase(gameBoard);
+    assertEquals(false, gameBoard.getGameStarted());
+    assertEquals(0, gameBoard.getResult());
+  }
+  
+  @Test
+  public void testClearDatabase() {
+    Database db = new Database();
+    db.databaseNewGame();
+    db.clearDatabase();
+    GameBoard gameBoard = new GameBoard();
+    db.fromDataBase(gameBoard);
+    assertEquals(false, gameBoard.getGameStarted());
+    assertEquals(0, gameBoard.getResult());
+  }
+  
+  @Test
+  public void testGameBoard() {
+    GameBoard gb = new GameBoard();
+    gb.setGameStarted(false);
+    gb.setTurn(1);
+    for (int i = 0; i < 3; ++i) {
+      for (int j = 0; j < 3; ++j) {
+        gb.setBoardStateForTest('X', i, j);
+      }
+    }
+    gb.setWinner(0);
+    gb.setDraw(false);
+    Player p1 = new Player('X', 1);
+    Player p2 = new Player('O', 2);
+    gb.setP1(p1);
+    gb.setP1(p2);
+    GameBoard gameboard = new GameBoard(gb);
+    assertEquals(false, gameboard.getGameStarted());
+    assertEquals(0, gameboard.getResult());
+  }
+  
+  @Test
+  public void testMessage() {
+    Message m = new Message("HI");
+    assertEquals("HI", m.getMessage());
+  }
+  
   
   /**
    * This will run every time after a test has finished.

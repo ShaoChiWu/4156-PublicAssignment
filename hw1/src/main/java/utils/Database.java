@@ -1,46 +1,26 @@
 package utils;
 
-import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.Queue;
 import models.GameBoard;
-import models.Move;
 import models.Player;
 
 
 public class Database {
   
-  private int code; 
-  
-  public Database() {
-    code = 0;
-  }
-  
-  private void testConnection() {
-    try {
-      Class.forName("org.sqlite.JDBC");
-      Connection connection = DriverManager.getConnection("jdbc:sqlite:tictactoe.db");
-    } catch (Exception e) {
-      System.err.println(e.getClass().getName() + ": " + e.getMessage());
-      System.exit(0);
-    }
-    System.out.println("Opened database successfully");
-    
-  }
   
 
-  
   /**
    *  Every time a new game.
    */
   public void databaseNewGame() {
-    
+    Connection connection = null;
     try {
       Class.forName("org.sqlite.JDBC");
-      Connection connection = DriverManager.getConnection("jdbc:sqlite:tictactoe.db");
+      connection = DriverManager.getConnection("jdbc:sqlite:tictactoe.db");
       System.out.println("Opened database successfully");
 
       Statement stmt = connection.createStatement();
@@ -66,19 +46,27 @@ public class Database {
     } catch (Exception e) {
       System.err.println(e.getClass().getName() + ": " + e.getMessage());
       System.exit(0);
+    } finally {
+      try {
+        if (connection != null) {
+          connection.close();
+        }
+      } catch (SQLException ex) {
+        System.out.println(ex.getMessage());
+      }
     }
-    System.out.println("Database: New Game");
   }
+    
   
   /**
    * Every time a new game.
    */
   
   public void clearDatabase() {
-    
+    Connection connection = null;
     try {
       Class.forName("org.sqlite.JDBC");
-      Connection connection = DriverManager.getConnection("jdbc:sqlite:tictactoe.db");
+      connection = DriverManager.getConnection("jdbc:sqlite:tictactoe.db");
       System.out.println("Opened database successfully");
 
       Statement stmt = connection.createStatement();
@@ -89,8 +77,15 @@ public class Database {
     } catch (Exception e) {
       System.err.println(e.getClass().getName() + ": " + e.getMessage());
       System.exit(0);
+    } finally {
+      try {
+        if (connection != null) {
+          connection.close();
+        }
+      } catch (SQLException ex) {
+        System.out.println(ex.getMessage());
+      }
     }
-    System.out.println("Database: New Game");
   }
   
   /**
@@ -104,9 +99,6 @@ public class Database {
     types[1] = 'O';
     
     char p2Type = (gb.getP1().getType() == types[0]) ? types[1] : types[0];
-    
-    testConnection();
-    
     int getGameStarted = gb.getGameStarted() ? 1 : 0;
     int draw;
     int win;
@@ -117,9 +109,10 @@ public class Database {
       draw = 0;
       win = gb.getResult();
     }
+    Connection connection = null;
     try {
       Class.forName("org.sqlite.JDBC");
-      Connection connection = DriverManager.getConnection("jdbc:sqlite:tictactoe.db");
+      connection = DriverManager.getConnection("jdbc:sqlite:tictactoe.db");
       System.out.println("Opened database successfully");
       Statement stmt = connection.createStatement();
       String sql = "INSERT INTO tictactoe"
@@ -155,8 +148,15 @@ public class Database {
     } catch (Exception e) {
       System.err.println(e.getClass().getName() + ": " + e.getMessage());
       System.exit(0);
+    } finally {
+      try {
+        if (connection != null) {
+          connection.close();
+        }
+      } catch (SQLException ex) {
+        System.out.println(ex.getMessage());
+      }
     }
-    System.out.println("Database: New Game");
   }
   
   /**
@@ -165,20 +165,16 @@ public class Database {
   public void fromDataBase(GameBoard gameBoard) {
     
     GameBoard gb = gameBoard;
-    
+    Connection connection = null;
     try {
       Class.forName("org.sqlite.JDBC");
-      Connection connection = DriverManager.getConnection("jdbc:sqlite:tictactoe.db");
+      connection = DriverManager.getConnection("jdbc:sqlite:tictactoe.db");
       connection.setAutoCommit(false);
       System.out.println("Ready to read the database");
 
       Statement stmt = connection.createStatement();
       ResultSet rs = stmt.executeQuery("select * from tictactoe " 
                    + "where rowid in(select max(rowid) from tictactoe);");
-      
-      if (rs == null) {
-        return;
-      }
        
       while (rs.next()) {
         String p1 = rs.getString("P1");
@@ -238,7 +234,14 @@ public class Database {
     } catch (Exception e) {
       System.err.println(e.getClass().getName() + ": " + e.getMessage());
       System.exit(0);
+    } finally {
+      try {
+        if (connection != null) {
+          connection.close();
+        }
+      } catch (SQLException ex) {
+        System.out.println(ex.getMessage());
+      }
     }
-    System.out.println("Operation done successfully");
   }
 }
